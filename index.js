@@ -3,66 +3,88 @@ const state = {
     {
       id: "001-beetroot",
       name: "beetroot",
-      price: 0.35
+      price: 0.35,
+      category: "vegetable"
     },
     {
       id: "002-carrot",
       name: "carrot",
-      price: 0.35
+      price: 0.35,
+      category: "vegetable"
     },
     {
       id: "003-apple",
       name: "apple",
-      price: 0.35
+      price: 0.35,
+      category: "fruit"
     },
     {
       id: "004-apricot",
       name: "apricot",
-      price: 0.35
+      price: 0.35,
+      category: "fruit"
     },
     {
       id: "005-avocado",
       name: "avocado",
-      price: 0.35
+      price: 0.35,
+      category: "fruit"
     },
     {
       id: "006-bananas",
       name: "bananas",
-      price: 0.35
+      price: 0.35,
+      category: "fruit"
     },
     {
       id: "007-bell-pepper",
       name: "bell pepper",
-      price: 0.35
+      price: 0.35,
+      category: "vegetable"
     },
     {
       id: "008-berry",
       name: "berry",
-      price: 0.35
+      price: 0.35,
+      category: "berry"
     },
     {
       id: "009-blueberry",
       name: "blueberry",
-      price: 0.35
+      price: 0.35,
+      category: "berry"
     },
     {
       id: "010-eggplant",
       name: "eggplant",
-      price: 0.35
+      price: 0.35,
+      category: "vegetable"
     }
   ],
-  cart: []
+  cart: [],
+  filters: [
+    {
+      category: "Fruits"
+    },
+    {
+      category: "Vegetables"
+    },
+    {
+      category: "Berries"
+    },
+    {
+      category: "All items"
+    }
+  ]
 };
 
 function renderStoreItems() {
   state.items.map((i) => {
-    console.log(i);
     el = document.createElement("li");
     el.innerHTML =  `<div class="store--item-icon">
     <img src="assets/icons/${i.id}.svg" alt="${i.name}" />
     </div>
     <button id="${i.id}" onClick="addToCart(this.id)">Add to cart</button>`
-    console.log(document.getElementsByClassName("item-list store--item-list"));
     document.getElementsByClassName("item-list store--item-list")[0].appendChild(el);
   });
 }
@@ -75,7 +97,6 @@ function addToCart(item) {
     state.cart.push(el);
   }
   else isIncart.qty += 1;
-  console.log(state.cart.length);
   renderCartItems();
 }
 
@@ -92,7 +113,6 @@ function renderCartItems() {
     <button id="${cartItem.id}" class="quantity-btn remove-btn center" onClick="reduceNumberofItems(this.id)">-</button>
     <span class="quantity-text center">${cartItem.qty}</span>
     <button id="${cartItem.id}" class="quantity-btn add-btn center" onClick="increaseNumberofItems(this.id)">+</button>`
-    console.log(document.getElementsByClassName("item-list cart--item-list"));
     document.getElementsByClassName("item-list cart--item-list")[0].appendChild(el);
     });
   
@@ -115,9 +135,8 @@ function calculateTotalCost() {
 
   el = document.createElement("span");
   el.innerHTML = `£${totalCost.toFixed(2)}`
-  console.log(document.getElementsByClassName("total-number"));
   document.getElementsByClassName("total-number")[0].appendChild(el);
-  console.log(totalCost)
+  
 }
 
 function reduceNumberofItems(item){
@@ -138,5 +157,78 @@ function increaseNumberofItems(item){
   renderCartItems();
 }
 
+function renderFilterButtons() {
+  state.filters.map((filter) => {
+      el = document.createElement("span");
+      el.innerHTML = `<button id="${filter.category}" class="filter-store-items-button center" onClick="filterStoreItems(this.id)">${filter.category}</button>`
+      document.getElementsByClassName("filter-store-items")[0].appendChild(el);
+  });
+}
+
+function renderFruitItems() {
+  const storeitems = document.getElementsByClassName("item-list store--item-list")[0]; 
+  storeitems.innerHTML = "";
+  state.items.map((i) => {
+    if(i.category === 'fruit'){
+      el = document.createElement("li");
+      el.innerHTML = `<div class="store--item-icon">
+      <img src="assets/icons/${i.id}.svg" alt="${i.name}" />
+      </div>
+      <button id="${i.id}" onClick="addToCart(this.id)">Add to cart</button>`
+      document.getElementsByClassName("item-list store--item-list")[0].appendChild(el);
+    }
+  });
+}
+
+function renderBerryItems() {
+  const storeitems = document.getElementsByClassName("item-list store--item-list")[0]; 
+  storeitems.innerHTML = "";
+  state.items.map((i) => {
+    if(i.category === 'berry'){
+      el = document.createElement("li");
+      el.innerHTML = `<div class="store--item-icon">
+      <img src="assets/icons/${i.id}.svg" alt="${i.name}" />
+      </div>
+      <button id="${i.id}" onClick="addToCart(this.id)">Add to cart</button>`
+      document.getElementsByClassName("item-list store--item-list")[0].appendChild(el);
+    }
+  });
+
+}
+
+function renderVegetableItems() {
+  const storeitems = document.getElementsByClassName("item-list store--item-list")[0]; 
+  storeitems.innerHTML = "";
+  state.items.map((i) => {
+    if(i.category === 'vegetable'){
+      el = document.createElement("li");
+      el.innerHTML = `<div class="store--item-icon">
+      <img src="assets/icons/${i.id}.svg" alt="${i.name}" />
+      </div>
+      <button id="${i.id}" onClick="addToCart(this.id)">Add to cart</button>`
+      document.getElementsByClassName("item-list store--item-list")[0].appendChild(el);
+    }
+  });
+
+}
+
+function filterStoreItems(filter) {
+  if(filter === 'Fruits'){
+    renderFruitItems();
+  }
+  if(filter === 'Vegetables'){
+    renderVegetableItems();
+  }
+  if(filter === 'Berries'){
+    renderBerryItems();
+  }
+  if(filter === 'All items'){
+    const storeitems = document.getElementsByClassName("item-list store--item-list")[0]; 
+    storeitems.innerHTML = "";
+    renderStoreItems();
+  }
+}
+
 renderStoreItems();
+renderFilterButtons();
 calculateTotalCost();
